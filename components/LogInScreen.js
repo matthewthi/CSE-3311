@@ -1,5 +1,7 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+
+import styles from './Styles'
 
 class LogInScreen extends Component {
     constructor(props) {
@@ -25,7 +27,7 @@ class LogInScreen extends Component {
 
                 <View style = {styles.buttonContainer}>
                     <TouchableOpacity 
-                        style = {styles.userButton}
+                        style = {styles.buttonStyle}
                         onPress = {() => this.props.navigation.navigate('Map', {userName: this.state.userName})}>
         
                         <Text style = {styles.buttonText}>Login</Text>
@@ -35,37 +37,5 @@ class LogInScreen extends Component {
         );
     }
 }
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#1e90ff",
-      alignItems: "center", 
-      justifyContent: "center",
-    },
-  
-    input: {
-      width: "90%",
-      backgroundColor: "#fff",
-      padding: 15,
-      marginBottom: 10
-    },
-  
-    buttonContainer: {
-      flexDirection: "row",
-  
-    },
-  
-    userButton: {
-      backgroundColor: "#ffd700",
-      width: "45%",
-      padding: 15
-    },
-  
-    buttonText: {
-      textAlign: "center",
-    },
-  
-  });
 
 export default LogInScreen;
