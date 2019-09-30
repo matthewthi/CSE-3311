@@ -5,6 +5,7 @@ import Geolocation from '@react-native-community/geolocation';
 import SlidingPanel from 'react-native-sliding-up-down-panels';
 
 import styles from './Styles'
+import { throwStatement } from '@babel/types';
 
 class MapScreen extends Component {
     constructor(props) {
@@ -17,29 +18,96 @@ class MapScreen extends Component {
 
         //Marker of currently selected posistion on map.
         markerSelect: null,
-        //Markers of created events.
-        markerEvent: [],
+
+        //Arrays of event markers.
+        markerEventCat1: [],
+        markerEventCat2: [],
+        markerEventCat3: [],
+        markerEventCat4: [],
+
+        //Holds the user's description of event to be created. User sets with <TextInput>.
+        eventDescription: null,
+
+        //Boolean. null to hide event description, 1 to show event description.
+        showDecription: null,
+
+        eventDescriptionText: null,
 
         error: null
     }
       this.handleCreateEvent = this.handleCreateEvent.bind(this);
-      //marker: null;
+      this.handleMarkerPress = this.handleMarkerPress.bind(this);
     }
 
+    //Function called with an event icon is pressed.
+    //Shows the decription of the event on the screen.
+    handleMarkerPress(arg1, arg2) {
+      console.log(arg1, arg2);
+
+      this.setState({showDecription: 1});
+
+      text = this.state.userName + "\n" + JSON.stringify(arg1) + "\n" + JSON.stringify(arg2);
+
+      this.setState({eventDescriptionText: text});
+    }
+
+    //Function called when 'Create Event' button is pressed.
+    //Adds an event icon at selected location.
     handleCreateEvent() {
-      if(this.state.category === '1'){
+      if(this.state.category === '1') {
         this.setState({
-          markerEvent: [
-            ...this.state.markerEvent,
+          markerEventCat1: [
+            ...this.state.markerEventCat1,
             {
-              coordinate: this.state.markerSelect
+              description: this.state.eventDescription,
+              coordinate: this.state.markerSelect,
             }
           ]
         })
         console.log("TEST 1");
       }
+
+      else if(this.state.category === '2') {
+        this.setState({
+          markerEventCat2: [
+            ...this.state.markerEventCat2,
+            {
+              description: this.state.eventDescription,
+              coordinate: this.state.markerSelect
+            }
+          ]
+        })
+        console.log("TEST 2");
+      }
+
+      else if(this.state.category === '3') {
+        this.setState({
+          markerEventCat3: [
+            ...this.state.markerEventCat3,
+            {
+              description: this.state.eventDescription,
+              coordinate: this.state.markerSelect
+            }
+          ]
+        })
+        console.log("TEST 3")
+      }
+      
+      else if(this.state.category === '4') {
+        this.setState({
+          markerEventCat4: [
+            ...this.state.markerEventCat4,
+            {
+              description: this.state.eventDescription,
+              coordinate: this.state.markerSelect
+            }
+          ]
+        })
+        console.log("TEST 4")
+      }
     }
 
+    //Get user's current location when component mounts.
     componentDidMount() {
       Geolocation.getCurrentPosition(
         position => {
@@ -54,6 +122,7 @@ class MapScreen extends Component {
       console.log(JSON.stringify(this.state.userName))
     }
   
+    //Render function.
     render() {
       return (
         <View style = {styles.mapConatiner}>
@@ -66,19 +135,65 @@ class MapScreen extends Component {
                 longitude: this.state.longitude, 
                 latitudeDelta: 0.09, 
                 longitudeDelta: 0.0921}}>
-    
+  
                 {this.state.markerSelect &&     
-                <Marker 
-                  coordinate = {this.state.markerSelect}>
-                  <Image 
-                    source = {require('./images/icon_1.png')}
-                    style = {{width: 25, height: 40}}/>
-                </Marker>}
+                  <Marker 
+                    coordinate = {this.state.markerSelect}>
+                    <Image 
+                      source = {require('./images/marker-black.png')}
+                      style = {styles.eventIconStyle}/>
+                  </Marker>}
 
-                {this.state.markerEvent.map((markerEvent) => {return <Marker {...markerEvent}/>})}
+                {this.state.markerEventCat1.map((markerEventCat1, i) => {return (
+                  <Marker 
+                    key = {i}
+                    coordinate = {markerEventCat1.coordinate}  
+                    description = {markerEventCat1.description} 
+                    onPress = {() => {this.handleMarkerPress(markerEventCat1.description, markerEventCat1.coordinate)}}>
+                      <Image 
+                        source = {require('./images/marker-red.png')}
+                        style = {styles.eventIconStyle}/> 
+                  </Marker>)})}
+
+                {this.state.markerEventCat2.map((markerEventCat2, i) => {return (
+                  <Marker 
+                    key = {i}
+                    coordinate = {markerEventCat2.coordinate}
+                    description = {markerEventCat2.description}
+                    onPress = {() => {this.handleMarkerPress(markerEventCat2.description, markerEventCat2.coordinate)}}>
+                    <Image
+                      source = {require('./images/marker-purple.png')}
+                      style = {styles.eventIconStyle}/>
+                  </Marker>)})}
+
+                {this.state.markerEventCat3.map((markerEventCat3, i) => {return (
+                  <Marker 
+                    key = {i}
+                    coordinate = {markerEventCat3.coordinate}
+                    description = {markerEventCat3.description}
+                    onPress = {() => {this.handleMarkerPress(markerEventCat3.description, markerEventCat3.coordinate)}}>
+                    <Image
+                      source = {require('./images/marker-green.png')}
+                      style = {styles.eventIconStyle}/>
+                  </Marker>)})}
+
+                {this.state.markerEventCat4.map((markerEventCat4, i) => {return (
+                  <Marker 
+                    key = {i}
+                    coordinate = {markerEventCat4.coordinate}
+                    description = {markerEventCat4.description}
+                    onPress = {() => {this.handleMarkerPress(markerEventCat4.description, markerEventCat4.coordinate)}}>
+                    <Image
+                      source = {require('./images/marker-orange.png')}
+                      style = {styles.eventIconStyle}/>
+                  </Marker>)})}
             </MapView>
 
-            
+            {this.state.showDecription && 
+                  <View style = {styles.eventDescriptionStyle}>
+                    <Text>{this.state.eventDescriptionText}</Text>
+                  </View>}
+
             <View style = {styles.testStyle}>
             <SlidingPanel
                 headerLayoutHeight = {50}
@@ -96,32 +211,34 @@ class MapScreen extends Component {
 
                             <TextInput
                                 style = {styles.input}
-                                placeholder = 'Description'/>
+                                placeholder = 'Description'
+                                onChangeText = {(eventDescription) => this.setState({eventDescription})}
+                                value = {this.state.eventDescription}/>
                         </View>
                         <View style = {styles.mapIconsContainerStyle}>
                             <TouchableOpacity
                                 onPress = {() => this.setState({category: '1'})}>
                                 <Image 
                                     style = {styles.mapIconsStyle}
-                                    source = {require('./images/icon_1.png')}/>
+                                    source = {require('./images/marker-red.png')}/>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress = {() => this.setState({category: '2'})}>
                                 <Image 
                                     style = {styles.mapIconsStyle}
-                                    source = {require('./images/icon_2.png')}/>
+                                    source = {require('./images/marker-purple.png')}/>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress = {() => this.setState({category: '3'})}>
                                 <Image 
                                     style = {styles.mapIconsStyle}
-                                    source = {require('./images/icon_3.png')}/>
+                                    source = {require('./images/marker-green.png')}/>
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 onPress = {() => this.setState({category: '4'})}>
                                 <Image 
                                     style = {styles.mapIconsStyle}
-                                    source = {require('./images/icon_4.png')}/>
+                                    source = {require('./images/marker-orange.png')}/>
                             </TouchableOpacity>
                         </View>   
 

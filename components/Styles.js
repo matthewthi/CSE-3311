@@ -18,6 +18,16 @@ export default StyleSheet.create({
         flex: 10,
     },
   
+    eventDescriptionStyle: {
+      flex: 1,
+      position: 'absolute',
+      alignSelf: 'center',
+      width: width * 0.95,
+      height: height * 0.15,
+      top: height * 0.02,
+      backgroundColor: 'white'
+    },
+
     createEventContainerStyle: {
         flex: 1,
         justifyContent: 'flex-start',
@@ -27,6 +37,11 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         marginTop: 10
+    },
+
+    eventIconStyle: {
+      width: 40,
+      height: 55
     },
 
     mapIconsStyle: {
