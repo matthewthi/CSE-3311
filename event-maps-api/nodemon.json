@@ -1,6 +1,0 @@
-{
-    "env": {
-      "MONGO_ATLAST_PW": "event-maps",
-      "JWT_KEY": "secret"
-    }
-  }
