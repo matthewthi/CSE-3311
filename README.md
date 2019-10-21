@@ -1,3 +1,6 @@
 # Event-Maps
 
-cse3311
+## Backend Repository
+https://github.com/cse3311-project/event-maps-api
+<br/>
+<br/>
