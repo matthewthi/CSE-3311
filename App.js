@@ -12,15 +12,21 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import LogInScreen from './components/LogInScreen';
+import RegisterScreen from './components/RegisterScreen';
 import MapScreen from './components/MapScreen';
 
 const RootStack = createStackNavigator(
   {
     LogIn: LogInScreen,
+    Register: RegisterScreen,
     Map: MapScreen,
   },
   {
-    initialRouteName: 'LogIn'
+    initialRouteName: 'LogIn',
+    
+    defaultNavigationOptions: {
+      header: null
+    }
   }
 );
 

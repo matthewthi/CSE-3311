@@ -3,13 +3,33 @@ import { StyleSheet, Dimensions } from 'react-native';
 const {width, height} = Dimensions.get('window');
 
 export default StyleSheet.create({
+
+    //LoginScreen Styles
     container: {
-        flex: 1,
-        backgroundColor: "#1e90ff",
-        alignItems: "center", 
-        justifyContent: "center",
+      flex: 1,
+      //backgroundColor: "#1e90ff",
+      backgroundColor: "white",
+      justifyContent: "center",
+      alignItems: "center"
     },
 
+    buttonStyle: {
+      width: "40%",
+      padding: 15,
+      borderRadius: 15,
+      marginTop: 10,
+      marginBottom: 10,
+      backgroundColor: "orange"
+      //backgroundColor: "#ffd700"
+    },
+
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      width: "90%"
+    },
+
+    //
     mapConatiner: {
         flex: 1,
     },
@@ -18,14 +38,51 @@ export default StyleSheet.create({
         flex: 10,
     },
   
+    //Styles for when clicking on an event marker.
+    eventDescriptionHeaderStyle: {
+      fontWeight: "bold",
+      fontSize: 20,
+      textAlign: "center"
+    },
+
+    eventDescriptionUserStyle: {
+      fontStyle: "italic",
+      textAlign: "right"
+    },
+
     eventDescriptionStyle: {
-      flex: 1,
-      position: 'absolute',
-      alignSelf: 'center',
-      width: width * 0.95,
-      height: height * 0.15,
-      top: height * 0.02,
-      backgroundColor: 'white'
+      backgroundColor: "white",
+      borderRadius: 10,
+      margin: 10,
+      padding: 10
+    },
+
+    eventDescriptionCat1Style: {
+      backgroundColor: "blue",
+      borderRadius: 10,
+      margin: 1,
+      padding: 1
+    },
+    
+    eventDescriptionCat2Style: {
+      backgroundColor: "orange",
+      borderRadius: 10,
+      margin: 1,
+      padding: 1
+    },
+
+    eventDescriptionCat3Style: {
+      backgroundColor: "red",
+      borderRadius: 10,
+      margin: 1,
+      padding: 1
+    },
+
+    eventDescriptionCat4Style: {
+      backgroundColor: "pink",
+      borderRadius: 10,
+      margin: 1,
+      padding: 1
     },
 
     createEventContainerStyle: {
@@ -51,30 +108,20 @@ export default StyleSheet.create({
 
     input: {
       width: "75%",
-      backgroundColor: "#fff",
+      backgroundColor: "#ddd",
+      borderRadius: 15,
+      borderColor: "black",
       padding: 15,
       marginTop: 10,
     },
   
     inputContainerStyle: {
+      flex: 0,
       alignItems: 'center'
-    },
-
-    buttonStyle: {
-      width: "45%",
-      padding: 15,
-      marginTop: 10,
-      marginBottom: 10,
-      backgroundColor: "#ffd700"
     },
 
     buttonContainerStyle: {
       alignItems: 'center'
-    },
-
-    buttonContainer: {
-      flexDirection: "row",
-  
     },
   
     userButton: {
@@ -90,7 +137,8 @@ export default StyleSheet.create({
     headerLayoutStyle: {
       width,
       height: 50,
-      backgroundColor: "#ffd700",
+      //backgroundColor: "#ffd700",
+      backgroundColor: "blue",
       justifyContent: 'center',
       alignItems: 'center'
     },
@@ -98,11 +146,27 @@ export default StyleSheet.create({
     slidingPanelLayoutStyle: {
       width,
       height,
-      backgroundColor: "#1e90ff",
+      //backgroundColor: "#1e90ff",
+      backgroundColor: "white",
+      alignContent: "center",
       justifyContent: 'flex-start',
     },
 
     testStyle: {
       flex: 1
+    },
+
+    mapHeaderStyle: {
+      flex: 1,
+      flexDirection: "row",
+      backgroundColor: "white"
+    },
+
+    eventCategoryDropdownStyle: {
+      width: "75%",
+      padding: 15,
+      marginTop: 10,
+      alignSelf: "center",
+      backgroundColor: "white"
     }
   });
