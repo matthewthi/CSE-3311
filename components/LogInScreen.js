@@ -3,50 +3,52 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 
 import Functions from './Functions'
 import styles from './Styles'
-//Test commit
+
 class LogInScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userName: null,
             password: null,
+            loginFailed: null,
         }
     }
 
-    postLoginData() {
-        fetch('https://event-maps-api.herokuapp.com/user/login', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: this.state.userName,
-            password: this.state.password,
-          })
-        }).then((response) => response.json()).then((responseJSON) => {
-            let result = responseJSON;
+    //Request to authenticate user data with database. 
+    //Navigate to MapScreen if successful. 
+    async navigateToMapScreen() {
+        try {
+            let result = await Functions.postLoginData(this.state.userName, this.state.password);
 
-            if(result.successful == true) {
-                console.log("postLogin true");
-
+            if(result == true) {
                 this.props.navigation.navigate('Map', {userName: this.state.userName});
             }
-        }).catch((error) => {
-          console.error(error);
-        });
+
+            //If user authentication fails, send warning to the user. 
+            else {
+                this.setState({loginFailed: true});
+            }
+        }
+
+        catch (error) {
+            console.error(error);
+        }
     }
 
+    //**********Render Function**********
     render() {
         return (
             <View style = {styles.container}>
                 <Text>Events-Map</Text>
+
+                {/*Username text input*/}
                 <TextInput 
                     style = {styles.input}
                     placeholder = "Username"
                     onChangeText = {(userName) => this.setState({userName})}
                     value = {this.state.userName}/>
  
+                {/*Password text input*/}
                 <TextInput
                     style = {styles.input}
                     placeholder = "Password"
@@ -54,14 +56,15 @@ class LogInScreen extends Component {
                     value = {this.state.password}/>
 
                 <View style = {styles.buttonContainer}>
+
+                    {/*Sign in button*/}
                     <TouchableOpacity 
                         style = {styles.buttonStyle}
-                        //onPress = {() => this.props.navigation.navigate('Map', {userName: this.state.userName})}>
-                        onPress = { () => this.postLoginData()}>
-                    
+                        onPress = { () => this.navigateToMapScreen()}>
                         <Text style = {styles.buttonText}>Sign In</Text>
                     </TouchableOpacity>
 
+                    {/*Register button*/}
                     <TouchableOpacity
                         style = {styles.buttonStyle}
                         onPress = {() => this.props.navigation.navigate('Register')}>
@@ -69,6 +72,9 @@ class LogInScreen extends Component {
                         <Text style = {styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/*Render text if user login failed to authenticate.*/}
+                {this.state.loginFailed && <Text style = {styles.loginFailedTextStyle}>Username or password incorrect</Text>}
             </View>
         );
     }

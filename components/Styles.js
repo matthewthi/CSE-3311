@@ -29,6 +29,9 @@ export default StyleSheet.create({
       width: "90%"
     },
 
+    loginFailedTextStyle: {
+      color: "red"
+    },  
     //
     mapConatiner: {
         flex: 1,
