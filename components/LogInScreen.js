@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 
 import Functions from './Functions'
 import styles from './Styles'
-
+//Test commit
 class LogInScreen extends Component {
     constructor(props) {
         super(props);
