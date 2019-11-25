@@ -6,6 +6,7 @@ import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import SlidingPanel from 'react-native-sliding-up-down-panels';
 
+import EventDescriptionMarker from "./EventDescriptionMarker"
 import Functions from "./Functions"
 import styles from './Styles'
 
@@ -102,19 +103,6 @@ class MapScreen extends Component {
     handleMapPress(event) {
       this.setState({markerSelect: event.nativeEvent.coordinate, markerDescription: -1});
     }
-
-    /*
-    handleMarkerPress(arg1, arg2) {
-      console.log(arg1, arg2);
-
-      this.setState({showDecription: 1});
-
-      text = this.state.userName + "\n" + JSON.stringify(arg1) + "\n" + JSON.stringify(arg2);
-
-      this.setState({eventDescriptionText: text});
-      
-    }
-    */
 
     //Function called when 'Create Event' button is pressed.
     //Adds an event icon at selected location.
@@ -250,30 +238,13 @@ class MapScreen extends Component {
             { this.state.eventFilterList[0] && this.state.markerEventCat1.map((markerEventCat1, i) => {
                 if(i == this.state.markerDescription && markerEventCat1.category == this.state.markerCategory) {
                   return (
-                    <Marker
+                    <EventDescriptionMarker
                       key = {i}
+                      name = {markerEventCat1.name}
+                      username = {markerEventCat1.username}
+                      description = {markerEventCat1.description}
                       coordinate = {markerEventCat1.coordinate}
-                      /*description = {markerEventCat1.description}
-                      category = {markerEventCat1.category}*/>
-
-                      <View style = {styles.eventDescriptionCat1Style}>
-                        <View style = {styles.eventDescriptionStyle}>
-                          <Text 
-                            style = {styles.eventDescriptionHeaderStyle}>
-                            {markerEventCat1.name}
-                          </Text>
-                          
-                          <Text 
-                            style = {styles.eventDescriptionUserStyle}>
-                            {`\tCreated by ${markerEventCat1.username}\n`}
-                          </Text>
-                          
-                          <Text>
-                            {markerEventCat1.description}
-                          </Text>
-                        </View>
-                      </View>
-                    </Marker>
+                      eventDescriptionCatStyle = {styles.eventDescriptionCat1Style}/>
                   )
                 }
                 
@@ -293,45 +264,17 @@ class MapScreen extends Component {
                 })
               }
 
-            { /*handleMarkerPress(markerEventCat1.description, markerEventCat1.coordinate) */}
-            { /*this.state.eventFilterList[0] && this.state.markerEventCat1.map((markerEventCat1, i) => {return (
-              <Marker 
-                key = {i}
-                coordinate = {markerEventCat1.coordinate}  
-                description = {markerEventCat1.description} 
-                onPress = {() => {this.handleMarkerPress(markerEventCat1.description, markerEventCat1.coordinate)}}>
-                  <Image 
-                    source = {require('./images/educational.png')}
-                    style = {styles.eventIconStyle}/> 
-            </Marker>)}) */}
-
             {/*Category 2 - Offical Uta Icon*/}
             { this.state.eventFilterList[1] && this.state.markerEventCat2.map((markerEventCat2, i) => {
                 if(i == this.state.markerDescription && markerEventCat2.category == this.state.markerCategory) {
                   return (
-                    <Marker
+                    <EventDescriptionMarker
                       key = {i}
+                      name = {markerEventCat2.name}
+                      username = {markerEventCat2.username}
+                      description = {markerEventCat2.description}
                       coordinate = {markerEventCat2.coordinate}
-                      description = {markerEventCat2.description}>
-              
-                      <View style = {styles.eventDescriptionCat2Style}>
-                        <View style = {styles.eventDescriptionStyle}>
-                        <Text 
-                            style = {styles.eventDescriptionHeaderStyle}>
-                            {markerEventCat2.name}
-                          </Text>
-                          
-                          <Text 
-                            style = {styles.eventDescriptionUserStyle}>
-                            {`\tCreated by ${markerEventCat2.username}\n`}
-                          </Text>
-                          
-                          <Text>
-                            {markerEventCat2.description}
-                          </Text>
-                        </View>
-                      </View>
-                    </Marker>
+                      eventDescriptionCatStyle = {styles.eventDescriptionCat2Style}/>
                   )
                 }
               
@@ -357,30 +300,13 @@ class MapScreen extends Component {
             { this.state.eventFilterList[2] && this.state.markerEventCat3.map((markerEventCat3, i) => {
                 if(i == this.state.markerDescription && markerEventCat3.category == this.state.markerCategory) {
                   return (
-                    <Marker
+                    <EventDescriptionMarker
                       key = {i}
-                      coordinate = {markerEventCat3.coordinate}
+                      name = {markerEventCat3.name}
+                      username = {markerEventCat3.username}
                       description = {markerEventCat3.description}
-                      category = {markerEventCat3.category}>
-
-                      <View style = {styles.eventDescriptionCat3Style}>
-                        <View style = {styles.eventDescriptionStyle}>
-                        <Text 
-                            style = {styles.eventDescriptionHeaderStyle}>
-                            {markerEventCat3.name}
-                          </Text>
-                          
-                          <Text 
-                            style = {styles.eventDescriptionUserStyle}>
-                            {`\tCreated by ${markerEventCat3.username}\n`}
-                          </Text>
-                          
-                          <Text>
-                            {markerEventCat3.description}
-                          </Text>
-                        </View>
-                      </View>
-                    </Marker>
+                      coordinate = {markerEventCat3.coordinate}
+                      eventDescriptionCatStyle = {styles.eventDescriptionCat3Style}/>
                   )
                 }
                 
@@ -404,30 +330,13 @@ class MapScreen extends Component {
             { this.state.eventFilterList[3] && this.state.markerEventCat4.map((markerEventCat4, i) => {
                 if(i == this.state.markerDescription && markerEventCat4.category == this.state.markerCategory) {
                   return (
-                    <Marker
+                    <EventDescriptionMarker
                       key = {i}
-                      coordinate = {markerEventCat4.coordinate}
+                      name = {markerEventCat4.name}
+                      username = {markerEventCat4.username}
                       description = {markerEventCat4.description}
-                      category = {markerEventCat4.category}>
-
-                      <View style = {styles.eventDescriptionCat4Style}>
-                        <View style = {styles.eventDescriptionStyle}>
-                        <Text 
-                            style = {styles.eventDescriptionHeaderStyle}>
-                            {markerEventCat4.name}
-                          </Text>
-                          
-                          <Text 
-                            style = {styles.eventDescriptionUserStyle}>
-                            {`\tCreated by ${markerEventCat4.username}\n`}
-                          </Text>
-                          
-                          <Text>
-                            {markerEventCat4.description}
-                          </Text>
-                        </View>
-                      </View>
-                    </Marker>
+                      coordinate = {markerEventCat4.coordinate}
+                      eventDescriptionCatStyle = {styles.eventDescriptionCat4Style}/>
                   )
                 }
                 
