@@ -51,8 +51,9 @@ class LogInScreen extends Component {
                 {/*Password text input*/}
                 <TextInput
                     style = {styles.input}
+                    secureTextEntry = {true}
                     placeholder = "Password"
-                    onChangeText = { (password) => this.setState({password})}
+                    onChangeText = {(password) => this.setState({password})}
                     value = {this.state.password}/>
 
                 <View style = {styles.buttonContainer}>

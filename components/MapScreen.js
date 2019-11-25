@@ -6,8 +6,8 @@ import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import SlidingPanel from 'react-native-sliding-up-down-panels';
 
+import Functions from "./Functions"
 import styles from './Styles'
-import { throwStatement } from '@babel/types';
 
 class MapScreen extends Component {
     constructor(props) {
@@ -35,6 +35,8 @@ class MapScreen extends Component {
         ],
 
         //Arrays of event markers.
+        eventList: [],
+
         markerEventCat1: [],
         markerEventCat2: [],
         markerEventCat3: [],
@@ -117,187 +119,76 @@ class MapScreen extends Component {
     //Function called when 'Create Event' button is pressed.
     //Adds an event icon at selected location.
     handleCreateEvent() {
-      if(this.state.category === '1') {
-        this.setState({
-          markerEventCat1: [
-            ...this.state.markerEventCat1,
-            {
-              username: this.state.userName,
-              name: this.state.eventName,
-              description: this.state.eventDescription,
-              category: this.state.category,
-              coordinate: this.state.markerSelect,
-            }
-          ]
-        })
-        console.log("TEST 1");
+      //Create event object.
+      let event = {
+        username: this.state.userName,
+        name: this.state.eventName,
+        description: this.state.eventDescription,
+        category: this.state.category,
+        coordinate: this.state.markerSelect
       }
 
-      else if(this.state.category === '2') {
-        this.setState({
-          markerEventCat2: [
-            ...this.state.markerEventCat2,
-            {
-              username: this.state.userName,
-              name: this.state.eventName,
-              description: this.state.eventDescription,
-              category: this.state.category,
-              coordinate: this.state.markerSelect
-            }
-          ]
-        })
-        console.log("TEST 2");
+      //Place event object into appropriate event list.
+      if(this.state.category === "1") {
+        this.setState({markerEventCat1: [...this.state.markerEventCat1, event]});
       }
 
-      else if(this.state.category === '3') {
-        this.setState({
-          markerEventCat3: [
-            ...this.state.markerEventCat3,
-            {
-              username: this.state.userName,
-              name: this.state.eventName,
-              description: this.state.eventDescription,
-              category: this.state.category,
-              coordinate: this.state.markerSelect
-            }
-          ]
-        })
-        console.log("TEST 3")
-      }
-      
-      else if(this.state.category === '4') {
-        this.setState({
-          markerEventCat4: [
-            ...this.state.markerEventCat4,
-            {
-              username: this.state.userName,
-              name: this.state.eventName,
-              description: this.state.eventDescription,
-              category: this.state.category,
-              coordinate: this.state.markerSelect
-            }
-          ]
-        })
-        console.log("TEST 4")
+      else if(this.state.category === "2") {
+        this.setState({markerEventCat2: [...this.state.markerEventCat2, event]});
       }
 
+      else if(this.state.category === "3") {
+        this.setState({markerEventCat3: [...this.state.markerEventCat3, event]});
+      }
+
+      else if(this.state.category === "4") {
+        this.setState({markerEventCat4: [...this.state.markerEventCat4, event]})
+      }
+
+      //Remove location select marker from MapView after new event marker has been rendered.
       this.setState({markerSelect: null});
-      this.postEvent();
+
+      //Add new event data to database.
+      Functions.postEvent(event);
     }
 
-    getEvents() {
-      return fetch('https://event-maps-api.herokuapp.com/events/', {
-        method: 'GET',
-      }).then((response) => response.json()).then((responseJSON) => {
-        let mylist = responseJSON.Events;
-
-        for(let i = 0; i < mylist.length; i++) {
-          if(mylist[i].category === "1") {
-            this.setState({markerEventCat1: [
-              ...this.state.markerEventCat1,
-              {
-                username: mylist[i].username,
-                name: mylist[i].name,
-                description: mylist[i].description,
-                category: mylist[i].category,
-                coordinate: {latitude: mylist[i].latitude, longitude: mylist[i].longitude}
-              }
-            ]});
-          }
-
-          else if(mylist[i].category === "2") {
-            this.setState({markerEventCat2: [
-              ...this.state.markerEventCat2,
-              {
-                username: mylist[i].username,
-                name: mylist[i].name,
-                description: mylist[i].description,
-                category: mylist[i].category,
-                coordinate: {latitude: mylist[i].latitude, longitude: mylist[i].longitude}
-              }
-            ]});
-          }
-
-          else if(mylist[i].category === "3") {
-            this.setState({markerEventCat3: [
-              ...this.state.markerEventCat3,
-              {
-                username: mylist[i].username,
-                name: mylist[i].name,
-                description: mylist[i].description,
-                category: mylist[i].category,
-                coordinate: {latitude: mylist[i].latitude, longitude: mylist[i].longitude}
-              }
-            ]});
-          }
-
-          else if(mylist[i].category === "4") {
-            this.setState({markerEventCat4: [
-              ...this.state.markerEventCat4,
-              {
-                username: mylist[i].username,
-                name: mylist[i].name,
-                description: mylist[i].description,
-                category: mylist[i].category,
-                coordinate: {latitude: mylist[i].latitude, longitude: mylist[i].longitude}
-              }
-            ]});
-          }
+    //Initialize event lists when component first mounts.
+    initEventList(eventList) {
+      for(let i = 0; i < eventList.length; i++) {
+        //Create JS object of event.
+        let event = {
+          username: eventList[i].username,
+          name: eventList[i].name,
+          description: eventList[i].description,
+          category: eventList[i].category,
+          coordinate: {latitude: eventList[i].latitude, longitude: eventList[i].longitude}
         }
 
-        console.log(mylist);
-      }).catch((error) => {
-        console.error(error);
-      });
+        //Place event object into appropriate list based on category.
+        if(eventList[i].category === "1") {
+          this.setState({markerEventCat1: [...this.state.markerEventCat1, event]});
+        }
+
+        else if(eventList[i].category === "2") {
+          this.setState({markerEventCat2: [...this.state.markerEventCat2, event]});
+        }
+
+        else if(eventList[i].category === "3") {
+          this.setState({markerEventCat3: [...this.state.markerEventCat3, event]});
+        }
+
+        else if(eventList[i].category === "4") {
+          this.setState({markerEventCat4: [...this.state.markerEventCat4, event]});
+        }
+      }
     }
 
-    /*
-    getUserEvents() {
-      id = this.state.userId.toString();
-    
-      return fetch('https://event-maps-api.herokuapp.com/user/events/created/' + id, {
-        method: 'GET'
-      }).then((response) => response.json()).then((responseJSON) => {
-        //let mylist = (responseJSON.Events);
-        //console.log(mylist[0].name, mylist[1].name);
-        let mylist = responseJSON.UserCreatedEvents;
-
-        console.log(mylist);
-        console.log(id);
-        console.log("Test test 1");
-    })}
-    */
-
-    postEvent() {
-      fetch('https://event-maps-api.herokuapp.com/events/', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: this.state.eventName,
-          address: 'Test address',
-          longitude: this.state.markerSelect.longitude,
-          latitude: this.state.markerSelect.latitude,
-          category: this.state.category,
-          tag: 'Test tag',
-          description: this.state.eventDescription,
-          username: this.state.userName
-          //userId: '5d92642e17ad5006348be674', 
-        })
-      }).then((response) => response.json()).then((responseJSON) => {
-        console.log(responseJSON);
-      }).catch((error) => {
-        console.error(error);
-      });
-    }
-
-    //Get user's current location when component mounts.
-    componentDidMount() {
-      this.getEvents();
+    //**********Component Did Mount Function**********
+    async componentDidMount() {
+      //this.getEvents();
       //this.getUserEvents();
 
+      //Get user's current location.
       Geolocation.getCurrentPosition(
         position => {
           this.setState({
@@ -308,10 +199,21 @@ class MapScreen extends Component {
         },
         error => this.setState({error: error.message})
       );
-      console.log(JSON.stringify(this.state.userName))
+
+      //Get list of events from database.
+      try {
+        let result = await Functions.getEvents();
+
+        //Populate state with events.
+        this.initEventList(result);
+      }
+
+      catch (error) {
+        console.error(error);
+      }
     }
   
-    //Render function.
+    //**********Render Function**********
     render() {
       return (
         <View style = {styles.mapConatiner}>
@@ -593,34 +495,5 @@ class MapScreen extends Component {
           </View>
         </View> ); }
 }
-
-/*
-<View style = {styles.mapIconsContainerStyle}>
-<TouchableOpacity
-    onPress = {() => this.setState({category: '1'})}>
-    <Image 
-        style = {styles.mapIconsStyle}
-        source = {require('./images/marker-red.png')}/>
-</TouchableOpacity>
-<TouchableOpacity
-    onPress = {() => this.setState({category: '2'})}>
-    <Image 
-        style = {styles.mapIconsStyle}
-        source = {require('./images/marker-purple.png')}/>
-</TouchableOpacity>
-<TouchableOpacity
-    onPress = {() => this.setState({category: '3'})}>
-    <Image 
-        style = {styles.mapIconsStyle}
-        source = {require('./images/marker-green.png')}/>
-</TouchableOpacity>
-<TouchableOpacity 
-    onPress = {() => this.setState({category: '4'})}>
-    <Image 
-        style = {styles.mapIconsStyle}
-        source = {require('./images/marker-orange.png')}/>
-</TouchableOpacity>
-</View>
-*/
 
 export default MapScreen;
