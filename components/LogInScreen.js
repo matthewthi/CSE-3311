@@ -39,6 +39,8 @@ class LogInScreen extends Component {
     render() {
         return (
             <View style = {styles.container}>
+                <View style = {styles.screenBorderStyle}/>
+
                 <Text>Events-Map</Text>
 
                 {/*Username text input*/}

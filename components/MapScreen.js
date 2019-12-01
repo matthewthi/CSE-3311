@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-//import CheckBox from "@react-native-community/checkbox";
 import { CheckBox } from "react-native-elements";
 import ModalDropdown from "react-native-modal-dropdown";
 import MapView, { Marker } from 'react-native-maps';
@@ -8,15 +7,18 @@ import Geolocation from '@react-native-community/geolocation';
 import SlidingPanel from 'react-native-sliding-up-down-panels';
 
 import EventDescriptionMarker from "./EventDescriptionMarker";
+import MapScreenNavBar from "./MapScreenNavBar";
+import EventFilters from "./EventFilters";
 import CreateEvent from "./CreateEvent";
+import UserProfile from "./UserProfile";
 import Functions from "./Functions";
 import styles from './Styles';
 
 class MapScreen extends Component {
     constructor(props) {
       super(props);
-      this.state = {
 
+      this.state = {
         //User information.
         userName: this.props.navigation.getParam('userName'),
         userId: this.props.navigation.getParam('userId'),
@@ -63,16 +65,9 @@ class MapScreen extends Component {
         longitude: 0,
         /******************************************************************************* */
 
-        //Boolean. null to hide event description, 1 to show event description.
-        showDecription: null,
-
-        eventDescriptionText: null,
-
         //Used to determine which event description is shown on screen.
         markerDescription: -1,
         markerCategory: -1,
-
-
 
         //Used for nav bar at bottom of MapScrren. Value of -1 to hide components.
         showFilters: -1,
@@ -87,11 +82,11 @@ class MapScreen extends Component {
       //this.postEvent = this.postEvent.bind(this);
     }
 
-    handleFiltersSelect() {
+    handleNavBarFilterSelect = () => {
       this.setState({showFilters: 1});
     }
 
-    handleCreateSelect() {
+    handleCreateSelect = () => {
       if(this.state.showCreate == -1) {
         this.setState({showCreate: 1});
       }
@@ -101,16 +96,12 @@ class MapScreen extends Component {
       }
     }
 
-    handleUserSelect() {
+    handleUserSelect = () => {
       this.setState({showUser: 1});
     }
 
-
-    //Function used to set event category display filters.
-    handleFilterSelect(index) {
-      let list = [...this.state.eventFilterList];
-      list[index] = !list[index];
-
+    //Function used to set event category display filters. Parent function that will be passed to child component.
+    handleFilterSelectParent = (list) => {
       this.setState({eventFilterList: list});
     }
 
@@ -135,6 +126,12 @@ class MapScreen extends Component {
         showFilters: -1,
         showCreate: -1,
         showUser: -1});
+    }
+
+    getEventDetails = (event) => {
+      console.log(event);
+
+      this.setState({showCreate: -1});
     }
 
     //Function called when 'Create Event' button is pressed.
@@ -248,20 +245,9 @@ class MapScreen extends Component {
     render() {
       return (
         <View style = {styles.mapConatiner}>
-          {/*
-          <View style = {styles.mapHeaderStyle}>
-            { this.state.eventFilterList.map((eventFilterList, index) => {return (
-              <CheckBox
-                key = {index}
-                value = {eventFilterList}
-                onChange = { () => this.handleFilterSelect(index) }/>
-            )}) }
-            </View>*/}
-
           <MapView
             showsUserLocation = {true}
             onPress = {(event) => this.handleMapPress(event)}
-            //onPress = {(event) => this.setState({markerSelect: event.nativeEvent.coordinate})}
             style = {styles.map}
             initialRegion = {{
             latitude: this.state.latitude, 
@@ -304,10 +290,7 @@ class MapScreen extends Component {
                       <Image 
                         source = {require('./images/educational.png')}
                         style = {styles.eventIconStyle}/> 
-                    </Marker>)
-                  }
-                })
-              }
+                    </Marker>)}})}
 
             {/*Category 2 - Offical Uta Icon*/}
             { this.state.eventFilterList[1] && this.state.markerEventCat2.map((markerEventCat2, i) => {
@@ -336,11 +319,7 @@ class MapScreen extends Component {
                       <Image
                         source = {require('./images/uta.png')}
                         style = {styles.eventIconStyle}/>
-                    </Marker>
-                  )
-                }
-              })
-            }
+                    </Marker>)}})}
 
             {/*Category 3 - Food Icon*/}
             { this.state.eventFilterList[2] && this.state.markerEventCat3.map((markerEventCat3, i) => {
@@ -368,10 +347,7 @@ class MapScreen extends Component {
                       <Image 
                         source = {require('./images/food.png')}
                         style = {styles.eventIconStyle}/> 
-                    </Marker>)
-                  }
-                })
-            }
+                    </Marker>)}})}
 
             {/*Category 4 - Social Icon*/}
             { this.state.eventFilterList[3] && this.state.markerEventCat4.map((markerEventCat4, i) => {
@@ -399,121 +375,35 @@ class MapScreen extends Component {
                       <Image 
                         source = {require('./images/social.png')}
                         style = {styles.eventIconStyle}/> 
-                    </Marker>)
-                  }
-                })
-            }
+                    </Marker>)}})}
           </MapView>
 
-          {this.state.showDecription && 
-            <View style = {styles.eventDescriptionStyle}>
-              <Text>{this.state.eventDescriptionText}</Text>
-            </View>}
+          {/*MapScreen NavigationBar components start here*/}
 
-{/*New stuff here */}
-          {this.state.showFilters == 1 &&
-            <View style = {styles.filterEventEntryStyle}>
-              <View style = {styles.filterHeaderStyle}>
-                <Text style = {styles.createEventTextStyle}>Filters</Text>
-              </View>    
-          
-              <View style = {styles.filtersStyle}>
-                {this.state.eventFilterList.map((eventFilterList, index) => {return (
-                  <CheckBox
-                  key = {index}
-                  title = {this.state.eventCategoryList[index]}
-                  checked = {eventFilterList}
-                  iconType = "material"
-                  checkedIcon = "check-box"
-                  uncheckedIcon = "check-box-outline-blank"
-                  checkedColor = "green"
-                  uncheckedColor = "blue"
-                  onPress = {() => this.handleFilterSelect(index)}/>
-                )}) }
-              </View>
-            </View>}
+          {/*Event Category Filters*/}
+          {this.state.showFilters == 1 && 
+            <EventFilters
+              handleFilterSelect = {this.handleFilterSelectParent}/>}
 
+          {/*Event Creation Component*/}
           {this.state.showCreate == 1 &&
-            <View style = {styles.createEventEntryStyle}>
-              <View style = {styles.createEventEntryHeaderStyle}>
-                <Text style = {styles.createEventTextStyle}>Create</Text>
-              </View>    
-              
-              <TextInput
-                style = {styles.input}
-                placeholder = "Event Name"/>
+            <CreateEvent
+              getEventDetails = {this.getEventDetails}/>}      
 
-              <TextInput
-                style = {styles.input}
-                placeholder = "Description"/>
-
-              <View style = {styles.buttonContainer}>
-                <TouchableOpacity
-                  style = {styles.buttonStyle}
-                  onPress = {() => this.handleCreateSelect()}>
-                  <Text style = {styles.buttonText}>Next</Text>
-                </TouchableOpacity>
-              </View>
-            </View>}
-
-          {this.state.showCreate == 2 &&
-            <View style = {styles.createEventEntryStyle}>
-              <View style = {styles.createEventEntryHeaderStyle}>
-                <Text style = {styles.createEventTextStyle}>Create</Text>
-              </View>    
-              
-              <TextInput
-                style = {styles.input}
-                placeholder = "Time"/>
-
-              <TextInput
-                style = {styles.input}
-                placeholder = "Date"/>
-
-              <View style = {styles.buttonContainer}>
-                <TouchableOpacity
-                  style = {styles.buttonStyle}
-                  onPress = {() => this.handleCreateSelect()}>
-                  <Text style = {styles.buttonText}>Next</Text>
-                </TouchableOpacity>
-              </View>
-            </View>}
-
-            {this.state.showUser == 1 &&
-            <View style = {styles.createEventEntryStyle}>
-              <View style = {styles.createEventEntryHeaderStyle}>
-                <Text style = {styles.createEventTextStyle}>User Profile</Text>
-              </View>    
-              
-              <Image
-                source = {require("./images/user-profile.png")}
-                style = {styles.userProfileImageStyle}/>
-
-              <Text style = {styles.userProfileUserNameTextStyle}>{this.state.userName}</Text>
-
-              <View style = {styles.horizontalRuleStyle}></View>
-
-              <Text style = {styles.userProfileTextStyle}>{this.state.userEmail}</Text>
-              <Text style = {styles.userProfileTextStyle}>Likes: </Text>
-            </View>}
+          {/*User profile component*/}
+          {this.state.showUser == 1 &&
+            <UserProfile
+              userName = {this.state.userName}
+              userEmail = {this.state.userEmail}/>}
           
+          {/*MapScreen navigation bar*/}
           {this.state.showFilters == -1 && this.state.showCreate == -1 && this.state.showUser == -1 &&
-          <View style = {styles.createEventStyle}>
-            <TouchableOpacity
-              onPress = {() => {this.handleFiltersSelect()}}>
-              <Text style = {styles.createEventTextStyle}>Filters</Text>
-            </TouchableOpacity>
+            <MapScreenNavBar
+              handleNavBarFilterSelect = {this.handleNavBarFilterSelect}
+              handleCreateSelect = {this.handleCreateSelect}
+              handleUserSelect = {this.handleUserSelect}/>
+          }
 
-            <TouchableOpacity
-              onPress = {() => {this.handleCreateSelect()}}>
-              <Text style = {styles.createEventTextStyle}>Create</Text>
-            </TouchableOpacity>  
-
-            <TouchableOpacity
-              onPress = {() => {this.handleUserSelect()}}>
-              <Text style = {styles.createEventTextStyle}>User</Text>
-            </TouchableOpacity>
-          </View>}
 {/*End new stuff */}
 
           {false &&

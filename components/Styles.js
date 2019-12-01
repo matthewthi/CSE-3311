@@ -31,7 +31,13 @@ export default StyleSheet.create({
     },
 
     createEventStyle: {
-      flex: 1,
+      //flex: 1,
+      position: "absolute",
+      bottom: 0,
+      width, 
+      height: height * 0.075,
+      paddingTop: 6,
+      paddingBottom: 10,
       backgroundColor: "blue",
       borderBottomColor: "orange",
       borderBottomWidth: 6,
@@ -100,17 +106,27 @@ export default StyleSheet.create({
     createEventTextStyle: {
       color: "white",
       fontSize: 20,
-      textAlignVertical: "center",
+      alignSelf: "center",
+      //textAlignVertical: "center",
     },
 
     //LoginScreen Styles
     container: {
       flex: 1,
-      //backgroundColor: "#1e90ff",
       backgroundColor: "white",
       justifyContent: "center",
       alignItems: "center"
     },
+
+    screenBorderStyle: {
+      width,
+      position: "absolute",
+      top: 0,
+      borderTopColor: "blue",
+      borderBottomColor: "orange",
+      borderTopWidth: 12,
+      borderBottomWidth: 8
+    }, 
 
     buttonStyle: {
       width: "40%",

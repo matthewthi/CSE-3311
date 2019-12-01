@@ -1,44 +1,85 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, TouchableOpacity, Image, Dimensions} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 
 import styles from "./Styles";
-
-const {width, height} = Dimensions.get('window');
 
 class CreateEvent extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            createEvent: null
+            eventName: null,
+            eventDescription: null,
+            eventDate: null,
+            showCreate: -1
         }
     }
 
-    handleCreateSelect() {
-        this.setState({createEvent: true});
+    getEventDetails() {
+        let event = {
+            name: this.state.eventName,
+            description: this.state.eventDescription,
+            date: this.state.eventDate
+        }
 
-        console.log(this.state.createEvent);
+        this.props.getEventDetails(event);
     }
 
     render() {
         return (
-            <View style = {styles.createEventStyle}>
-                {this.state.createEvent &&
-                    <View style = {styles.createEventEntryStyle}>
-                        
-                    </View>}
+            <View>
+            {this.state.showCreate == -1 &&
+                <View style = {styles.createEventEntryStyle}>
+                    <View style = {styles.createEventEntryHeaderStyle}>
+                        <Text style = {styles.createEventTextStyle}>Create</Text>
+                    </View>    
+            
+                    <TextInput
+                        style = {styles.input}
+                        placeholder = "Event Name"
+                        onChangeText = {(name) => this.setState({eventName: name})}
+                        value = {this.state.eventName}/>
 
-                <TouchableOpacity>
-                    <Text style = {styles.createEventTextStyle}>Filters</Text>
-                </TouchableOpacity>
+                    <TextInput
+                        style = {styles.input}
+                        placeholder = "Description"
+                        onChangeText = {(description) => this.setState({eventDescription: description})}
+                        value = {this.state.eventDescription}/>
 
-                <TouchableOpacity
-                    onPress = {() => {this.handleCreateSelect()}}>
-                    <Text style = {styles.createEventTextStyle}>Create</Text>
-                </TouchableOpacity>
+                    <View style = {styles.buttonContainer}>
+                        <TouchableOpacity
+                            style = {styles.buttonStyle}
+                            onPress = {() => this.setState({showCreate: 1})}>
+                            <Text style = {styles.buttonText}>Next</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>}
 
-                <TouchableOpacity>
-                    <Text style = {styles.createEventTextStyle}>User</Text>
-                </TouchableOpacity>
+            {this.state.showCreate == 1 && 
+                <View style = {styles.createEventEntryStyle}>
+                    <View style = {styles.createEventEntryHeaderStyle}>
+                        <Text style = {styles.createEventTextStyle}>Create</Text>
+                    </View>    
+            
+                    <TextInput
+                        style = {styles.input}
+                        placeholder = "Time"/>
+
+                    <TextInput
+                        style = {styles.input}
+                        placeholder = "Date"
+                        onChangeText = {(date) => this.setState({eventDate: date})}
+                        value = {this.state.eventDate}/>
+
+                    <View style = {styles.buttonContainer}>
+                        <TouchableOpacity
+                            style = {styles.buttonStyle}
+                            onPress = {() => this.getEventDetails()}>
+                            <Text style = {styles.buttonText}>Submit</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            }
             </View>
         );
     }

@@ -38,6 +38,8 @@ class RegisterScreen extends Component {
     render() {
         return (
             <View style = {styles.container}>
+                <View style = {styles.screenBorderStyle}/>
+                
                 <Text>Register</Text>
 
                 <TextInput

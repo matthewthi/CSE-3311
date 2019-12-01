@@ -1,19 +1,31 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import styles from './Styles'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class EventDescriptionMarker extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            likes: this.props.likes
+        }
+    }
+
+    handleLikeButtonPress() {
+        let count = this.state.likes;
+        count += 1;
+        
+        this.setState({likes: count});
     }
 
     render() {
         return (
             <Marker
-                coordinate = {this.props.coordinate}>
+                coordinate = {this.props.coordinate}
+                onPress = {() => this.handleLikeButtonPress()}>
 
                 <View style = {this.props.eventDescriptionCatStyle}>
                     <View style = {styles.eventDescriptionStyle}>
@@ -34,7 +46,7 @@ class EventDescriptionMarker extends Component {
                             <Text style = {styles.likeButtonTextStyle}>Like</Text>
                         </TouchableOpacity>
 
-                        <Text>{this.props.likes}</Text>
+                        <Text>{this.state.likes}</Text>
                     </View>
                 </View>
             </Marker>
