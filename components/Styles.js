@@ -4,6 +4,105 @@ const {width, height} = Dimensions.get('window');
 
 export default StyleSheet.create({
 
+    filtersStyle: {
+      flexDirection: "column",
+      
+    },
+
+    horizontalRuleStyle: {
+      width: width * 0.75,
+      borderBottomColor: "black",
+      borderBottomWidth: 4,
+      marginBottom: 16
+    },
+
+    userProfileImageStyle: {
+      marginTop: 10,
+      marginBottom: 15
+    },
+
+    userProfileUserNameTextStyle: {
+      fontSize: 20,
+      fontWeight: "bold"
+    },
+
+    userProfileTextStyle: {
+      fontSize: 14
+    },
+
+    createEventStyle: {
+      flex: 1,
+      backgroundColor: "blue",
+      borderBottomColor: "orange",
+      borderBottomWidth: 6,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      alignContent: "center"
+    },
+
+    eventInputContainerStyle: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center"
+    },
+
+    filterEventEntryStyle: {
+      backgroundColor: "white",
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      alignItems: "center",
+      position: "absolute",
+      //left: 0,
+      //right: 0,
+      bottom: 0,
+      width: width,
+      height: height * 0.5
+    },
+
+    createEventEntryStyle: {
+      backgroundColor: "white",
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      alignItems: "center",
+      position: "absolute",
+      //left: 0,
+      //right: 0,
+      bottom: 0,
+      width: width,
+      height: height * 0.4
+    },
+
+    filterHeaderStyle: {
+      width,
+      backgroundColor: "blue",
+      borderBottomColor: "orange",
+      borderBottomWidth: 6,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      marginBottom: 20,
+      justifyContent: "center",
+      alignItems: "center"
+    },
+
+    createEventEntryHeaderStyle: {
+      width,
+      backgroundColor: "blue",
+      borderBottomColor: "orange",
+      borderBottomWidth: 6,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      justifyContent: "center",
+      alignItems: "center"
+    },
+
+    createEventTextStyle: {
+      color: "white",
+      fontSize: 20,
+      textAlignVertical: "center",
+    },
+
     //LoginScreen Styles
     container: {
       flex: 1,
@@ -21,6 +120,25 @@ export default StyleSheet.create({
       marginBottom: 10,
       backgroundColor: "orange"
       //backgroundColor: "#ffd700"
+    },
+
+    likeButtonStyle: {
+      width: "40%",
+      padding: 5,
+      borderRadius: 15,
+      marginTop: 15,
+      marginBottom: 10,
+      backgroundColor: "#ccc"
+      //backgroundColor: "#ffd700"
+    },
+
+    likeButtonTextStyle: {
+      color: "white",
+      textAlign: "center"
+    },
+
+    likeButtonContainerStyle: {
+      flexDirection: "row"
     },
 
     buttonContainer: {

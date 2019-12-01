@@ -17,8 +17,8 @@ class Functions {
         let responseJSON = await response.json();
 
         if(responseJSON.successful == true) {
-          console.log("response true");
-          return true;
+
+          return responseJSON;
         }
 
         return false;
@@ -72,6 +72,22 @@ class Functions {
         let responseJSON = await response.json();
 
         console.log(responseJSON);
+      }
+
+      catch (error) {
+        console.error(error);
+      }
+    }
+
+    static async getUserData(userId) {
+      try {
+        let response = await fetch('https://event-maps-api.herokuapp.com/user/' + userId, {
+          method: 'GET',
+        });
+
+        let responseJSON = await response.json();
+
+        return responseJSON;
       }
 
       catch (error) {

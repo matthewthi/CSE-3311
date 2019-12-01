@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-import CheckBox from "@react-native-community/checkbox";
+//import CheckBox from "@react-native-community/checkbox";
+import { CheckBox } from "react-native-elements";
 import ModalDropdown from "react-native-modal-dropdown";
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import SlidingPanel from 'react-native-sliding-up-down-panels';
 
-import EventDescriptionMarker from "./EventDescriptionMarker"
-import Functions from "./Functions"
-import styles from './Styles'
+import EventDescriptionMarker from "./EventDescriptionMarker";
+import CreateEvent from "./CreateEvent";
+import Functions from "./Functions";
+import styles from './Styles';
 
 class MapScreen extends Component {
     constructor(props) {
       super(props);
       this.state = {
 
+        //User information.
         userName: this.props.navigation.getParam('userName'),
-        //userId: this.props.navigation.getParam('userId'),
-        
+        userId: this.props.navigation.getParam('userId'),
+        userEmail: null,
+
         /******************************************************************************* */
         //The following data members are all for <Marker> components.
 
@@ -36,8 +40,6 @@ class MapScreen extends Component {
         ],
 
         //Arrays of event markers.
-        eventList: [],
-
         markerEventCat1: [],
         markerEventCat2: [],
         markerEventCat3: [],
@@ -69,6 +71,13 @@ class MapScreen extends Component {
         //Used to determine which event description is shown on screen.
         markerDescription: -1,
         markerCategory: -1,
+
+
+
+        //Used for nav bar at bottom of MapScrren. Value of -1 to hide components.
+        showFilters: -1,
+        showCreate: -1,
+        showUser: -1
     }
 
       this.handleCreateEvent = this.handleCreateEvent.bind(this);
@@ -77,6 +86,25 @@ class MapScreen extends Component {
       //this.getUserEvents = this.getUserEvents.bind(this);
       //this.postEvent = this.postEvent.bind(this);
     }
+
+    handleFiltersSelect() {
+      this.setState({showFilters: 1});
+    }
+
+    handleCreateSelect() {
+      if(this.state.showCreate == -1) {
+        this.setState({showCreate: 1});
+      }
+      
+      else if(this.state.showCreate == 1) {
+        this.setState({showCreate: 2});
+      }
+    }
+
+    handleUserSelect() {
+      this.setState({showUser: 1});
+    }
+
 
     //Function used to set event category display filters.
     handleFilterSelect(index) {
@@ -101,7 +129,12 @@ class MapScreen extends Component {
     }
 
     handleMapPress(event) {
-      this.setState({markerSelect: event.nativeEvent.coordinate, markerDescription: -1});
+      this.setState({
+        markerSelect: event.nativeEvent.coordinate, 
+        markerDescription: -1,
+        showFilters: -1,
+        showCreate: -1,
+        showUser: -1});
     }
 
     //Function called when 'Create Event' button is pressed.
@@ -149,7 +182,8 @@ class MapScreen extends Component {
           name: eventList[i].name,
           description: eventList[i].description,
           category: eventList[i].category,
-          coordinate: {latitude: eventList[i].latitude, longitude: eventList[i].longitude}
+          coordinate: {latitude: eventList[i].latitude, longitude: eventList[i].longitude},
+          likes: eventList[i].likes
         }
 
         //Place event object into appropriate list based on category.
@@ -173,7 +207,6 @@ class MapScreen extends Component {
 
     //**********Component Did Mount Function**********
     async componentDidMount() {
-      //this.getEvents();
       //this.getUserEvents();
 
       //Get user's current location.
@@ -199,12 +232,23 @@ class MapScreen extends Component {
       catch (error) {
         console.error(error);
       }
+
+      try{
+        let result = await Functions.getUserData(this.state.userId);
+
+        this.setState({userEmail: result.user.email});
+      }
+
+      catch (error) {
+        console.error(error);
+      }
     }
   
     //**********Render Function**********
     render() {
       return (
         <View style = {styles.mapConatiner}>
+          {/*
           <View style = {styles.mapHeaderStyle}>
             { this.state.eventFilterList.map((eventFilterList, index) => {return (
               <CheckBox
@@ -212,7 +256,7 @@ class MapScreen extends Component {
                 value = {eventFilterList}
                 onChange = { () => this.handleFilterSelect(index) }/>
             )}) }
-          </View>
+            </View>*/}
 
           <MapView
             showsUserLocation = {true}
@@ -244,7 +288,8 @@ class MapScreen extends Component {
                       username = {markerEventCat1.username}
                       description = {markerEventCat1.description}
                       coordinate = {markerEventCat1.coordinate}
-                      eventDescriptionCatStyle = {styles.eventDescriptionCat1Style}/>
+                      eventDescriptionCatStyle = {styles.eventDescriptionCat1Style}
+                      likes = {markerEventCat1.likes}/>
                   )
                 }
                 
@@ -274,7 +319,8 @@ class MapScreen extends Component {
                       username = {markerEventCat2.username}
                       description = {markerEventCat2.description}
                       coordinate = {markerEventCat2.coordinate}
-                      eventDescriptionCatStyle = {styles.eventDescriptionCat2Style}/>
+                      eventDescriptionCatStyle = {styles.eventDescriptionCat2Style}
+                      likes = {markerEventCat2.likes}/>
                   )
                 }
               
@@ -306,7 +352,8 @@ class MapScreen extends Component {
                       username = {markerEventCat3.username}
                       description = {markerEventCat3.description}
                       coordinate = {markerEventCat3.coordinate}
-                      eventDescriptionCatStyle = {styles.eventDescriptionCat3Style}/>
+                      eventDescriptionCatStyle = {styles.eventDescriptionCat3Style}
+                      likes = {markerEventCat3.likes}/>
                   )
                 }
                 
@@ -336,7 +383,8 @@ class MapScreen extends Component {
                       username = {markerEventCat4.username}
                       description = {markerEventCat4.description}
                       coordinate = {markerEventCat4.coordinate}
-                      eventDescriptionCatStyle = {styles.eventDescriptionCat4Style}/>
+                      eventDescriptionCatStyle = {styles.eventDescriptionCat4Style}
+                      likes = {markerEventCat4.likes}/>
                   )
                 }
                 
@@ -362,7 +410,114 @@ class MapScreen extends Component {
               <Text>{this.state.eventDescriptionText}</Text>
             </View>}
 
-          <View style = { styles.testStyle}>
+{/*New stuff here */}
+          {this.state.showFilters == 1 &&
+            <View style = {styles.filterEventEntryStyle}>
+              <View style = {styles.filterHeaderStyle}>
+                <Text style = {styles.createEventTextStyle}>Filters</Text>
+              </View>    
+          
+              <View style = {styles.filtersStyle}>
+                {this.state.eventFilterList.map((eventFilterList, index) => {return (
+                  <CheckBox
+                  key = {index}
+                  title = {this.state.eventCategoryList[index]}
+                  checked = {eventFilterList}
+                  iconType = "material"
+                  checkedIcon = "check-box"
+                  uncheckedIcon = "check-box-outline-blank"
+                  checkedColor = "green"
+                  uncheckedColor = "blue"
+                  onPress = {() => this.handleFilterSelect(index)}/>
+                )}) }
+              </View>
+            </View>}
+
+          {this.state.showCreate == 1 &&
+            <View style = {styles.createEventEntryStyle}>
+              <View style = {styles.createEventEntryHeaderStyle}>
+                <Text style = {styles.createEventTextStyle}>Create</Text>
+              </View>    
+              
+              <TextInput
+                style = {styles.input}
+                placeholder = "Event Name"/>
+
+              <TextInput
+                style = {styles.input}
+                placeholder = "Description"/>
+
+              <View style = {styles.buttonContainer}>
+                <TouchableOpacity
+                  style = {styles.buttonStyle}
+                  onPress = {() => this.handleCreateSelect()}>
+                  <Text style = {styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            </View>}
+
+          {this.state.showCreate == 2 &&
+            <View style = {styles.createEventEntryStyle}>
+              <View style = {styles.createEventEntryHeaderStyle}>
+                <Text style = {styles.createEventTextStyle}>Create</Text>
+              </View>    
+              
+              <TextInput
+                style = {styles.input}
+                placeholder = "Time"/>
+
+              <TextInput
+                style = {styles.input}
+                placeholder = "Date"/>
+
+              <View style = {styles.buttonContainer}>
+                <TouchableOpacity
+                  style = {styles.buttonStyle}
+                  onPress = {() => this.handleCreateSelect()}>
+                  <Text style = {styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            </View>}
+
+            {this.state.showUser == 1 &&
+            <View style = {styles.createEventEntryStyle}>
+              <View style = {styles.createEventEntryHeaderStyle}>
+                <Text style = {styles.createEventTextStyle}>User Profile</Text>
+              </View>    
+              
+              <Image
+                source = {require("./images/user-profile.png")}
+                style = {styles.userProfileImageStyle}/>
+
+              <Text style = {styles.userProfileUserNameTextStyle}>{this.state.userName}</Text>
+
+              <View style = {styles.horizontalRuleStyle}></View>
+
+              <Text style = {styles.userProfileTextStyle}>{this.state.userEmail}</Text>
+              <Text style = {styles.userProfileTextStyle}>Likes: </Text>
+            </View>}
+          
+          {this.state.showFilters == -1 && this.state.showCreate == -1 && this.state.showUser == -1 &&
+          <View style = {styles.createEventStyle}>
+            <TouchableOpacity
+              onPress = {() => {this.handleFiltersSelect()}}>
+              <Text style = {styles.createEventTextStyle}>Filters</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress = {() => {this.handleCreateSelect()}}>
+              <Text style = {styles.createEventTextStyle}>Create</Text>
+            </TouchableOpacity>  
+
+            <TouchableOpacity
+              onPress = {() => {this.handleUserSelect()}}>
+              <Text style = {styles.createEventTextStyle}>User</Text>
+            </TouchableOpacity>
+          </View>}
+{/*End new stuff */}
+
+          {false &&
+          <View style = {styles.testStyle}>
             <SlidingPanel
               headerLayoutHeight = {50}
               headerLayout = { () =>
@@ -402,6 +557,7 @@ class MapScreen extends Component {
                   </View>
                 </View> }/>
           </View>
+          }
         </View> ); }
 }
 

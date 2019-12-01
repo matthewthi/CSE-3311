@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import styles from './Styles'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class EventDescriptionMarker extends Component {
     constructor(props) {
@@ -27,6 +28,13 @@ class EventDescriptionMarker extends Component {
                         </Text>
                 
                         <Text>{this.props.description}</Text>
+
+                        <TouchableOpacity
+                            style = {styles.likeButtonStyle}>
+                            <Text style = {styles.likeButtonTextStyle}>Like</Text>
+                        </TouchableOpacity>
+
+                        <Text>{this.props.likes}</Text>
                     </View>
                 </View>
             </Marker>

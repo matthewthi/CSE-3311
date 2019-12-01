@@ -20,8 +20,8 @@ class LogInScreen extends Component {
         try {
             let result = await Functions.postLoginData(this.state.userName, this.state.password);
 
-            if(result == true) {
-                this.props.navigation.navigate('Map', {userName: this.state.userName});
+            if(result != false) {
+                this.props.navigation.navigate('Map', {userName: this.state.userName, userId: result.user_id});
             }
 
             //If user authentication fails, send warning to the user. 
