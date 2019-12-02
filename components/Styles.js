@@ -233,6 +233,11 @@ export default StyleSheet.create({
         marginTop: 10
     },
 
+    selectIconStyle: {
+      width: 30,
+      height: 45
+    },
+
     eventIconStyle: {
       width: 40,
       height: 55
@@ -307,3 +312,5 @@ export default StyleSheet.create({
       backgroundColor: "white"
     }
   });
+
+  

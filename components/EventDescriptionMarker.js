@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import React, { Component } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
-import styles from './Styles'
+import Functions from "./Functions";
+import styles from "./Styles";
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class EventDescriptionMarker extends Component {
@@ -10,6 +11,7 @@ class EventDescriptionMarker extends Component {
         super(props);
 
         this.state = {
+            eventId: this.props._id,
             likes: this.props.likes
         }
     }
@@ -17,7 +19,8 @@ class EventDescriptionMarker extends Component {
     handleLikeButtonPress() {
         let count = this.state.likes;
         count += 1;
-        
+
+        Functions.patchEventLikes(this.state.eventId, count);
         this.setState({likes: count});
     }
 

@@ -19,7 +19,8 @@ class CreateEvent extends Component {
         let event = {
             name: this.state.eventName,
             description: this.state.eventDescription,
-            date: this.state.eventDate
+            date: this.state.eventDate,
+            category: "1"
         }
 
         this.props.getEventDetails(event);

@@ -71,7 +71,7 @@ class Functions {
 
         let responseJSON = await response.json();
 
-        console.log(responseJSON);
+        return responseJSON;
       }
 
       catch (error) {
@@ -88,6 +88,27 @@ class Functions {
         let responseJSON = await response.json();
 
         return responseJSON;
+      }
+
+      catch (error) {
+        console.error(error);
+      }
+    }
+
+    static async patchEventLikes(eventId, val) {
+      try {
+        let response = await fetch('https://event-maps-api.herokuapp.com/events/' + eventId, {
+          method: 'PATCH',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify([{"propName": "likes", "value": val}])
+        });
+
+        let responseJSON = await response.json();
+
+        console.log(responseJSON);
       }
 
       catch (error) {

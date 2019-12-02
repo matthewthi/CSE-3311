@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-import { CheckBox } from "react-native-elements";
+import { View, Image } from 'react-native';
 import ModalDropdown from "react-native-modal-dropdown";
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import SlidingPanel from 'react-native-sliding-up-down-panels';
 
 import EventDescriptionMarker from "./EventDescriptionMarker";
 import MapScreenNavBar from "./MapScreenNavBar";
@@ -13,6 +11,8 @@ import CreateEvent from "./CreateEvent";
 import UserProfile from "./UserProfile";
 import Functions from "./Functions";
 import styles from './Styles';
+
+let MapStyle = require("./CustomMapStyle");
 
 class MapScreen extends Component {
     constructor(props) {
@@ -76,10 +76,6 @@ class MapScreen extends Component {
     }
 
       this.handleCreateEvent = this.handleCreateEvent.bind(this);
-      //this.handleMarkerPress = this.handleMarkerPress.bind(this);
-      //this.getEvents = this.getEvents.bind(this);
-      //this.getUserEvents = this.getUserEvents.bind(this);
-      //this.postEvent = this.postEvent.bind(this);
     }
 
     handleNavBarFilterSelect = () => {
@@ -128,46 +124,51 @@ class MapScreen extends Component {
         showUser: -1});
     }
 
-    getEventDetails = (event) => {
-      console.log(event);
-
-      this.setState({showCreate: -1});
-    }
-
     //Function called when 'Create Event' button is pressed.
     //Adds an event icon at selected location.
-    handleCreateEvent() {
+    async handleCreateEvent(eventDetails) {
       //Create event object.
       let event = {
         username: this.state.userName,
-        name: this.state.eventName,
-        description: this.state.eventDescription,
-        category: this.state.category,
+        name: eventDetails.name,
+        description: eventDetails.description,
+        eventDate: eventDetails.date,
+        category: eventDetails.category,
         coordinate: this.state.markerSelect
       }
 
+      //Add new event data to database.
+      try {
+        let result = await Functions.postEvent(event);
+
+        event["_id"] = result.eventId;
+      }
+
+      catch (error) {
+        console.error(error);
+      }
+
       //Place event object into appropriate event list.
-      if(this.state.category === "1") {
+      if(event.category === "1") {
         this.setState({markerEventCat1: [...this.state.markerEventCat1, event]});
       }
 
-      else if(this.state.category === "2") {
+      else if(event.category === "2") {
         this.setState({markerEventCat2: [...this.state.markerEventCat2, event]});
       }
 
-      else if(this.state.category === "3") {
+      else if(event.category === "3") {
         this.setState({markerEventCat3: [...this.state.markerEventCat3, event]});
       }
 
-      else if(this.state.category === "4") {
+      else if(event.category === "4") {
         this.setState({markerEventCat4: [...this.state.markerEventCat4, event]})
       }
 
       //Remove location select marker from MapView after new event marker has been rendered.
-      this.setState({markerSelect: null});
-
-      //Add new event data to database.
-      Functions.postEvent(event);
+      this.setState({
+        markerSelect: null,
+        showCreate: -1});
     }
 
     //Initialize event lists when component first mounts.
@@ -176,6 +177,7 @@ class MapScreen extends Component {
         //Create JS object of event.
         let event = {
           username: eventList[i].username,
+          _id: eventList[i]._id,
           name: eventList[i].name,
           description: eventList[i].description,
           category: eventList[i].category,
@@ -248,6 +250,7 @@ class MapScreen extends Component {
           <MapView
             showsUserLocation = {true}
             onPress = {(event) => this.handleMapPress(event)}
+            customMapStyle = {MapStyle.mapStyle}
             style = {styles.map}
             initialRegion = {{
             latitude: this.state.latitude, 
@@ -260,8 +263,8 @@ class MapScreen extends Component {
               <Marker 
                 coordinate = {this.state.markerSelect}>
                 <Image 
-                  source = {require('./images/marker-black.png')}
-                  style = {styles.eventIconStyle}/>
+                  source = {require('./images/selection.png')}
+                  style = {styles.selectIconStyle}/>
               </Marker> }
 
             {/*Category 1 - Study Group Icon*/}
@@ -271,6 +274,7 @@ class MapScreen extends Component {
                     <EventDescriptionMarker
                       key = {i}
                       name = {markerEventCat1.name}
+                      _id = {markerEventCat1._id}
                       username = {markerEventCat1.username}
                       description = {markerEventCat1.description}
                       coordinate = {markerEventCat1.coordinate}
@@ -299,6 +303,7 @@ class MapScreen extends Component {
                     <EventDescriptionMarker
                       key = {i}
                       name = {markerEventCat2.name}
+                      _id = {markerEventCat2._id}
                       username = {markerEventCat2.username}
                       description = {markerEventCat2.description}
                       coordinate = {markerEventCat2.coordinate}
@@ -328,6 +333,7 @@ class MapScreen extends Component {
                     <EventDescriptionMarker
                       key = {i}
                       name = {markerEventCat3.name}
+                      _id = {markerEventCat3._id}
                       username = {markerEventCat3.username}
                       description = {markerEventCat3.description}
                       coordinate = {markerEventCat3.coordinate}
@@ -356,6 +362,7 @@ class MapScreen extends Component {
                     <EventDescriptionMarker
                       key = {i}
                       name = {markerEventCat4.name}
+                      _id = {markerEventCat4._id}
                       username = {markerEventCat4.username}
                       description = {markerEventCat4.description}
                       coordinate = {markerEventCat4.coordinate}
@@ -388,7 +395,7 @@ class MapScreen extends Component {
           {/*Event Creation Component*/}
           {this.state.showCreate == 1 &&
             <CreateEvent
-              getEventDetails = {this.getEventDetails}/>}      
+              getEventDetails = {this.handleCreateEvent}/>}      
 
           {/*User profile component*/}
           {this.state.showUser == 1 &&
@@ -404,51 +411,7 @@ class MapScreen extends Component {
               handleUserSelect = {this.handleUserSelect}/>
           }
 
-{/*End new stuff */}
-
-          {false &&
-          <View style = {styles.testStyle}>
-            <SlidingPanel
-              headerLayoutHeight = {50}
-              headerLayout = { () =>
-                <View style = {styles.headerLayoutStyle}>
-                  <Text style = {{color: "white"}}>Event Menu</Text>
-                </View> }
-
-              slidingPanelLayout = {() =>
-                <View style = {styles.slidingPanelLayoutStyle}>
-                  <View style = {styles.inputContainerStyle}>
-                    <TextInput 
-                      style = {styles.input}
-                      placeholder = "Event Name"
-                      onChangeText = { (eventName) => this.setState({eventName})}
-                      value = {this.state.eventName}/>
-
-                    <TextInput
-                      style = {styles.input}
-                      placeholder = 'Description'
-                      onChangeText = {(eventDescription) => this.setState({eventDescription})}
-                      value = {this.state.eventDescription}/>
-                  </View>
-
-                  <View style = {styles.eventCategoryDropdownStyle}>
-                    <ModalDropdown
-                      options = {this.state.eventCategoryList}
-                      onSelect = {(index, value) => {this.handleCategorySelect(index, value)}}>
-                    </ModalDropdown>
-                  </View>   
-
-                  <View style = {styles.buttonContainerStyle}>
-                    <TouchableOpacity
-                      style = {styles.buttonStyle}
-                      onPress = {this.handleCreateEvent}>
-                      <Text style = {styles.buttonText}>Create Event</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View> }/>
-          </View>
-          }
-        </View> ); }
+        </View> );}
 }
 
 export default MapScreen;
