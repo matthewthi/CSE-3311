@@ -10,7 +10,7 @@ class UserProfile extends Component {
 
     render() {
         return (
-            <View style = {styles.createEventEntryStyle}>
+            <View style = {styles.userProfileStyle}>
               <View style = {styles.createEventEntryHeaderStyle}>
                 <Text style = {styles.createEventTextStyle}>User Profile</Text>
               </View>    

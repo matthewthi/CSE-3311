@@ -67,7 +67,29 @@ export default StyleSheet.create({
       height: height * 0.5
     },
 
-    createEventEntryStyle: {
+    createEventEntryOneStyle: {
+      backgroundColor: "white",
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      alignItems: "center",
+      position: "absolute",
+      bottom: 0,
+      width: width,
+      height: height * 0.45
+    },
+
+    createEventEntryTwoStyle: {
+      backgroundColor: "white",
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      alignItems: "center",
+      position: "absolute",
+      bottom: 0,
+      width: width,
+      height: height * 0.55
+    },
+
+    userProfileStyle: {
       backgroundColor: "white",
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
@@ -166,6 +188,14 @@ export default StyleSheet.create({
     loginFailedTextStyle: {
       color: "red"
     },  
+
+    registerFailedTextStyle: {
+      color: "red"
+    },
+
+    registerSuccessTextStyle: {
+      color: "green"
+    },
     //
     mapConatiner: {
         flex: 1,

@@ -10,8 +10,13 @@ class RegisterScreen extends Component {
         this.state = {
             userName: null,
             password: null,
-            email: null
+            email: null,
+            registerStatus: null
         }
+    }
+
+    componentDidMount() {
+        this.setState({registerStatus: null});
     }
 
     postUserRegisterData() {
@@ -29,7 +34,13 @@ class RegisterScreen extends Component {
         }).then((response) => response.json()).then((responseJSON) => {
             let result = responseJSON;
 
-            console.log(responseJSON);
+            if(result.successful == true) {
+                this.setState({registerStatus: 1});
+            }
+
+            else {
+                this.setState({registerStatus: 0});
+            }
         }).catch((error) => {
           console.error(error);
         });
@@ -66,6 +77,13 @@ class RegisterScreen extends Component {
 
                     <Text style = {styles.buttonText}>Register</Text>
                 </TouchableOpacity>
+
+                {/*Render message to user depending on register success/failure.*/}
+                {this.state.registerStatus == 1 &&
+                    <Text style = {styles.registerSuccessTextStyle}>Registration successful!</Text>}
+
+                {this.state.registerStatus == 0 &&
+                    <Text style = {styles.registerFailedTextStyle}>Registration failed</Text>}
 
             </View>
         )

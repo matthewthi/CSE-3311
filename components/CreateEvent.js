@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Picker } from 'react-native';
 
 import styles from "./Styles";
 
@@ -11,8 +11,31 @@ class CreateEvent extends Component {
             eventName: null,
             eventDescription: null,
             eventDate: null,
+            category: "Category",
+            categoryColor: "blue",
             showCreate: -1
         }
+    }
+
+    handleCategorySelect(itemValue, itemIndex) {
+        console.log(itemValue, itemIndex);
+        if(itemIndex == 0) {
+            this.setState({categoryColor: "blue"});
+        }
+
+        else if(itemIndex == 1) {
+            this.setState({categoryColor: "orange"});
+        }
+
+        else if(itemIndex == 2) {
+            this.setState({categoryColor: "red"});
+        }
+
+        else if(itemIndex == 3) {
+            this.setState({categoryColor: "pink"});
+        }
+
+        this.setState({category: itemValue});
     }
 
     getEventDetails() {
@@ -20,7 +43,7 @@ class CreateEvent extends Component {
             name: this.state.eventName,
             description: this.state.eventDescription,
             date: this.state.eventDate,
-            category: "1"
+            category: this.state.category
         }
 
         this.props.getEventDetails(event);
@@ -30,7 +53,7 @@ class CreateEvent extends Component {
         return (
             <View>
             {this.state.showCreate == -1 &&
-                <View style = {styles.createEventEntryStyle}>
+                <View style = {styles.createEventEntryOneStyle}>
                     <View style = {styles.createEventEntryHeaderStyle}>
                         <Text style = {styles.createEventTextStyle}>Create</Text>
                     </View>    
@@ -57,7 +80,7 @@ class CreateEvent extends Component {
                 </View>}
 
             {this.state.showCreate == 1 && 
-                <View style = {styles.createEventEntryStyle}>
+                <View style = {styles.createEventEntryTwoStyle}>
                     <View style = {styles.createEventEntryHeaderStyle}>
                         <Text style = {styles.createEventTextStyle}>Create</Text>
                     </View>    
@@ -72,6 +95,27 @@ class CreateEvent extends Component {
                         onChangeText = {(date) => this.setState({eventDate: date})}
                         value = {this.state.eventDate}/>
 
+                    
+                    <View style = {{
+                        position: "absolute", 
+                        bottom: 122, 
+                        left: 70, 
+                        height: 24, 
+                        width: 8, 
+                        backgroundColor: this.state.categoryColor}}>
+                    </View>
+
+                    <Picker
+                        mode = "dropdown"
+                        selectedValue = {this.state.category}
+                        style = {{height: 100, width: 200}}
+                        onValueChange = {(itemValue, itemIndex) => {this.handleCategorySelect(itemValue, itemIndex)}}>
+                        <Picker.Item label = "Study Group" value = "1"/>
+                        <Picker.Item label = "Official UTA" value = "2"/>
+                        <Picker.Item label = "Food" value = "3"/>
+                        <Picker.Item label = "Social" value = "4"/>
+                    </Picker>
+                    
                     <View style = {styles.buttonContainer}>
                         <TouchableOpacity
                             style = {styles.buttonStyle}

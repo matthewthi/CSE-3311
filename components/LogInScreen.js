@@ -14,6 +14,10 @@ class LogInScreen extends Component {
         }
     }
 
+    componentDidMount() {
+        this.setState({loginFailed: null});
+    }
+
     //Request to authenticate user data with database. 
     //Navigate to MapScreen if successful. 
     async navigateToMapScreen() {
@@ -26,7 +30,7 @@ class LogInScreen extends Component {
 
             //If user authentication fails, send warning to the user. 
             else {
-                this.setState({loginFailed: true});
+                this.setState({loginFailed: 1});
             }
         }
 
@@ -77,7 +81,7 @@ class LogInScreen extends Component {
                 </View>
 
                 {/*Render text if user login failed to authenticate.*/}
-                {this.state.loginFailed && <Text style = {styles.loginFailedTextStyle}>Username or password incorrect</Text>}
+                {this.state.loginFailed == 1 && <Text style = {styles.loginFailedTextStyle}>Username or password incorrect</Text>}
             </View>
         );
     }
