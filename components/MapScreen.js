@@ -136,6 +136,10 @@ class MapScreen extends Component {
         category: eventDetails.category,
         coordinate: this.state.markerSelect
       }
+      
+      if(event.coordinate == null) {
+        return;
+      }
 
       //Add new event data to database.
       try {

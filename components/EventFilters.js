@@ -19,6 +19,7 @@ class EventFilters extends Component {
     handleFilterSelect(index) {
         eventFilterList[index] = !eventFilterList[index];
 
+        //Function passed as prop from MapScreen.
         this.props.handleFilterSelect(eventFilterList);
     } 
 

@@ -11,7 +11,7 @@ class CreateEvent extends Component {
             eventName: null,
             eventDescription: null,
             eventDate: null,
-            category: "Category",
+            category: "1",
             categoryColor: "blue",
             showCreate: -1
         }
